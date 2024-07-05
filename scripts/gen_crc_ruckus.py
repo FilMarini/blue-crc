@@ -53,8 +53,16 @@ def gen_verilog(conf_file_path, verilog_dir, table_dir):
     return result
 
 def gen_ruckus(verilog_dir, table_dir):
-    with open("ruckus.tcl", 'w') as r:
-        r.write(f"""# Load RUCKUS library
+    filename = 'ruckus.tcl'
+    if os.path.exists(filename):
+        with open(filename, 'a') as r:
+            r.write(f"""
+# Load sources
+loadSource -dir \"$::DIR_PATH/{verilog_dir}\"
+""")
+    else:
+        with open(filename, 'w') as r:
+            r.write(f"""# Load RUCKUS library
 source $::env(RUCKUS_PROC_TCL)
 
 # Load sources
